@@ -1,0 +1,317 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <script src="https://fb.me/react-0.13.3.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+    <script src="colorpicker.min.js"></script>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="text/jsx">
+
+     var Comment = React.createClass({
+       render: function() {
+         var rawMarkup = marked((this.props.children || '').toString(), {sanitize: true});
+         var textStyle = {
+          color: this.props.author.color
+         };
+         var time = ('' + (new Date(this.props.time))).replace(/GMT.+/,"");
+
+
+         return (
+           <div className="comment">
+             <h2 className="commentAuthor">
+               {this.props.author.username}
+             </h2>
+             <span className="time">{time}</span>
+             <span className="commentText" style={textStyle} dangerouslySetInnerHTML={{__html: rawMarkup}} />
+           </div>
+         );
+       }
+     });
+     
+     var ThreadList = React.createClass({
+         loadCommentsFromServer: function() {
+         $.ajax({
+           url: this.props.url,
+           dataType: 'json',
+           cache: false,
+           success: function(data) {
+             this.setState({data: data});
+           }.bind(this),
+           error: function(xhr, status, err) {
+             console.error(this.props.url, status, err.toString());
+           }.bind(this)
+         });
+       },
+       
+       componentDidMount: function() {
+         this.loadCommentsFromServer();
+         setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+       },
+       
+        getInitialState: function() {
+         return {data: []};
+       },
+
+       switchActive: function (threadname) {
+            this.setState({activeThread: threadname});
+       },     
+
+        render: function() {
+            var threads = {};
+            var self = this;
+            this.state.data.forEach(function (comment, i) {
+                if (!threads[comment.thread]) {
+                    threads[comment.thread] = [];
+                }
+                threads[comment.thread].push(comment);
+            });
+            var threads_dom = [];
+            Object.keys(threads).map(function (key) {
+                if (self.state.activeThread === key) {
+                    threads_dom.push(<Thread url={self.props.url} user={self.props.user} name={key} key={key} comments={threads[key]} />);
+                }
+            });
+            if (!threads_dom.length && self.state.activeThread) {
+                threads_dom = [<Thread url={self.props.url} user={self.props.user} name={self.state.activeThread} key={self.state.activeThread} comments={[]} />]
+            }
+         return (
+
+            <div className="threads">
+            <Sidebar threads={threads} activeThread={this.state.activeThread} switchActive={this.switchActive} />
+            <div className="threadList">
+                {threads_dom}
+            </div>
+           </div>
+         );
+       } 
+     });
+     
+    var Thread = React.createClass({
+        render: function () {
+         return (
+             <div className="thread">
+                 <h1 className="title">Thread: {this.props.name}</h1>
+                  <CommentBox url={this.props.url} user={this.props.user} name={this.props.name} comments={this.props.comments}/>
+              </div>
+             );   
+        }
+    });
+
+    var Sidebar = React.createClass({
+         getInitialState: function() {
+         return {newThreadname: ""};
+       },
+        changeHandler: function(ev) {
+            this.setState({newThreadname: ev.target.value});
+            this.props.switchActive(ev.target.value);
+        },
+        render: function () {
+            var self = this;
+            var threads = Object.keys(this.props.threads).map(function (threadname) {
+                var extraClass = 'threadSelector';
+                if (threadname === self.props.activeThread) {
+                  extraClass += 'Active';
+                }
+                return (
+                        <h1 className="title">
+                            <span onClick={self.props.switchActive.bind(null, threadname)} className={extraClass} >#{threadname}({self.props.threads[threadname].length})</span>
+                        </h1>
+                    );
+            });
+            threadname = this.state.newThreadname;
+
+            return (
+                <div className="sideBar"> 
+                     {threads}
+                
+                        <input className="input-field" type="text" placeholder="#channelname" onFocus={this.changeHandler} onChange={this.changeHandler} />
+                        
+                    
+                </div>
+
+            );
+        }
+    });
+
+     var CommentBox = React.createClass({
+       handleCommentSubmit: function(comment) {
+         var comments = this.props.comments;
+         comment.author = this.props.user;
+         comment.time = +(new Date());
+         comment.thread = this.props.name;
+         comments.push(comment);
+         this.setState({comments: comments}, function() {
+           // `setState` accepts a callback. To avoid (improbable) race condition,
+           // `we'll send the ajax request right after we optimistically set the new
+           // `state.
+           $.ajax({
+             url: this.props.url,
+             dataType: 'json',
+             type: 'POST',
+             data: comment,
+             success: function(data) {
+               this.setState({comments: data});
+             }.bind(this),
+             error: function(xhr, status, err) {
+               console.error(this.props.url, status, err.toString());
+             }.bind(this)
+           });
+         });
+       },
+
+       render: function() {
+         return (
+           <div className="commentBox">
+             <CommentList data={this.props.comments} />
+             <CommentForm onCommentSubmit={this.handleCommentSubmit} />
+           </div>
+         );
+       }
+     });
+    
+     var CommentList = React.createClass({ 
+       render: function() {
+         var commentNodes = this.props.data.map(function(comment, index) {
+           return (
+             // `key` is a React-specific concept and is not mandatory for the
+             // purpose of this tutorial. if you're curious, see more here:
+             // http://facebook.github.io/react/docs/multiple-components.html#dynamic-children
+             <Comment author={comment.author} time={parseInt(comment.time,10)} thread={comment.thread} key={index}>
+               {comment.text}
+             </Comment>
+           );
+         });
+         return (
+           <div className="commentList">
+             {commentNodes}
+           </div>
+         );
+       }
+     });
+
+     var CommentForm = React.createClass({
+       handleSubmit: function(e) {
+         e.preventDefault();
+         var text = React.findDOMNode(this.refs.text).value.trim();
+         if (!text) {
+           return;
+         }
+         this.props.onCommentSubmit({text: text});
+         React.findDOMNode(this.refs.text).value = '';
+       },
+       render: function() {
+         return (
+           <form className="commentForm" onSubmit={this.handleSubmit}>
+             <input className="input-field" type="text" placeholder="Say something..." ref="text" />
+             <button className="submit-button" type="submit" value="Send">Send</button>
+           </form>
+         );
+       }
+     });
+    
+     var Login = React.createClass({
+         getInitialState: function() {
+           return {error: undefined, color: 'black'};
+         },
+  
+         loginHandler: function (e) {
+            e.preventDefault();
+            var indexTextColor;
+            var username = React.findDOMNode(this.refs.username).value;
+            var color = this.state.color;
+            if (!username) {
+              this.setState({
+                error: <div className="error">A username is required</div>
+              });
+              return;
+            }
+            else this.props.pageStateHandler({
+              username: username,
+              color: color
+            });
+
+         },
+         render: function () {
+             return (
+              <div className="login-wrapper">
+                <h1 className="title">Login chat</h1> 
+                 <form className="loginForm" onSubmit={this.loginHandler}>
+                     {this.state.error}
+                     <input className="input-field" type="text" placeholder="Your name" ref="username"/>
+                     <h2 className="title-color">Select your text color</h2>
+                     <div id="picker-wrapper"> 
+                        <div id="picker"></div>
+                        <div id="picker-indicator"></div>
+                     </div>
+                     <div id="slider-wrapper">
+                        <div id="slider"></div>
+                        <div id="slider-indicator"></div>
+                     </div>
+                     <button className="submit-button" type="submit" value="Login">Login</button>
+                </form>
+              </div>
+             )
+         },
+            componentDidMount: function() {
+            var self = this;
+
+            ColorPicker.fixIndicators(
+                    document.getElementById('slider-indicator'),
+                    document.getElementById('picker-indicator'));
+
+            ColorPicker(
+                    document.getElementById('slider'), 
+                    document.getElementById('picker'), 
+
+                    function(hex, hsv, rgb, pickerCoordinate, sliderCoordinate) {
+
+                        ColorPicker.positionIndicators(
+                            document.getElementById('slider-indicator'),
+                            document.getElementById('picker-indicator'),
+                            sliderCoordinate, pickerCoordinate
+                        );
+
+                        self.setState({color: hex})
+                    }
+            );          
+        }
+     });
+     
+     var Page = React.createClass({
+         getInitialState: function() {
+           return {user: {
+            username: undefined,
+            color: 'black'
+           }}
+         },
+         pageStateHandler: function (user) {
+             this.setState({user: user});
+         },
+         render: function () {
+             var content;
+             if (!this.state.user.username) {
+                 content = <Login pageStateHandler={this.pageStateHandler}/>
+             } 
+             else {
+                 content = <ThreadList url="comments.json" user={this.state.user} pollInterval={2000} />
+             }
+             return (
+                 <div>{content}</div>
+             )
+         }
+     });
+     
+     React.render(
+       <Page />,
+       document.getElementById('content')
+     );
+    </script>
+  </body>
+</html>

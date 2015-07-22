@@ -1,0 +1,15 @@
+{
+  "name": "ReactJS-chatbox",
+  "version": "0.0.1",
+  "description": "A chat example with ReactJS.",
+  "main": "server.js",
+  "repository": "https://github.com/rickdoesburg/reactjs-chatbox",
+  "license" : "MIT",
+  "author": "Rick Doesburg <rick@rickdoesburg.com>, Eltjan Venema",
+  "dependencies": {
+    "async": "~0.2.8",
+    "express": "~3.2.4",
+    "socket.io": "~0.9.14",
+    "body-parser": "*"
+  }
+}

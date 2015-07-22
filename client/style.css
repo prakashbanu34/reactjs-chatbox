@@ -1,0 +1,301 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span,
+h1, h2, h3, h4, h5, h6, p,
+a, strong, b, u, i, ol, ul, li,
+fieldset, form, label{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* END RESET */
+.title {
+    text-transform: uppercase;
+    font-size: 2em;
+    color: #009CFF;
+    margin: .5em 0;
+}
+
+.title-color {
+    font-size: 1em;
+    color: #009CFF;
+    margin: .5em 0;
+}
+.login-wrapper {
+    width: 50%;
+    margin: 20px auto;
+    
+    background: #F7F7F7;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 0 5px 2px rgba(0,0,0,.35);
+    background-image: radial-gradient(center 0, circle farthest-corner, rgba(255,255,255,0.4), rgba(255,255,255,0));
+}
+
+.commentForm{
+	margin-top: 10px;
+}
+
+.input-field {
+    padding: 10px 15px;
+    font-size: 1em;
+	border: 1px solid #009CFF;
+ 	outline-color: #6374AB;
+    margin-bottom: 15px;
+}
+
+
+
+.commentForm .input-field {
+	width: 73%;
+}
+
+.channelForm {
+
+}
+
+.login-wrapper .submit-button {
+	display: block;
+	margin: 0 auto;
+  	background: #0e64bd;
+	border: 1px solid rgba(0,0,0,0.15);
+ 	border-radius: 4px;
+ 	transition: all 0.3s ease-out;
+  	box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    0 2px 2px rgba(0,0,0,0.3),
+    0 0 4px 1px rgba(0,0,0,0.2);
+}
+
+.submit-button {
+    padding: 10px 15px;
+    font-size: 1em;
+    color: #fff;
+    background: #0e64bd;
+	border: 1px solid rgba(0,0,0,0.15);
+ 	border-radius: 4px;
+ 	transition: all 0.3s ease-out;
+  	box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    0 2px 2px rgba(0,0,0,0.3),
+    0 0 4px 1px rgba(0,0,0,0.2);
+}
+
+.submit-button:hover {
+	background: #009CFF;
+}
+
+#picker-wrapper {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    display: inline-block;
+}
+
+#slider-wrapper{
+    width: 30px;
+    height: 200px;
+    position: relative;
+    display: inline-block;
+}       
+
+#picker-indicator {
+    width: 3px;
+    height: 3px;
+    top: 75px;
+    left: 100px;
+    position: absolute;
+    border: 1px solid white;
+}      
+
+#slider-indicator {
+	width: 90%;
+	height: 10px;
+    top: 50px;
+	position: absolute;
+	border: 1px solid black;
+}
+
+.thread {
+    padding: 20px;
+    margin-bottom: 15px;
+    margin-left: 300px;
+    width: 400px;
+    float:left;
+}
+
+.commentBox {
+
+}
+
+.error {
+    color: #b00b13;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.comment {
+    padding: 15px;
+    margin-bottom: 15px;
+    width: 90%;
+    clear: both;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.comment:nth-child(odd) {
+	background: #EBF5FF;
+	-webkit-animation-duration: 0.3s; 
+    -animation-duration: 0.3s; 
+    -webkit-animation-fill-mode: both; 
+    -animation-fill-mode: both; 
+    -webkit-animation-name: fadeInLeft; 
+    -animation-name: fadeInLeft; 
+}
+
+@-webkit-keyframes fadeInLeft { 
+    0% { 
+        opacity: 0; 
+        -webkit-transform: translateX(-20px); 
+    } 
+    100% { 
+        opacity: 1; 
+        -webkit-transform: translateX(0); 
+    } 
+} 
+@keyframes fadeInLeft { 
+    0% { 
+        opacity: 0; 
+        transform: translateX(-20px); 
+    } 
+    100% { 
+        opacity: 1; 
+        transform: translateX(0); 
+    } 
+} 
+
+@-webkit-keyframes fadeInRight { 
+    0% { 
+        opacity: 0; 
+        -webkit-transform: translateX(20px); 
+    } 
+    100% { 
+        opacity: 1; 
+        -webkit-transform: translateX(0); 
+    } 
+} 
+@keyframes fadeInRight { 
+    0% { 
+        opacity: 0; 
+        transform: translateX(20px); 
+    } 
+    100% { 
+        opacity: 1; 
+        transform: translateX(0); 
+    } 
+} 
+
+.comment:nth-child(odd):after {
+	position: absolute;
+	content: '';
+	left: -10px;
+	top: 10px;
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid #EBF5FF;
+}
+
+.comment:nth-child(even){
+    background: #FFF5E6;
+  	float: right;
+  	-webkit-animation-duration: 0.3s; 
+    -animation-duration: 0.3s; 
+    -webkit-animation-fill-mode: both; 
+    -animation-fill-mode: both; 
+    -webkit-animation-name: fadeInRight; 
+    -animation-name: fadeInRight; 
+}
+
+.comment:nth-child(even):before {
+	position: absolute;
+	content: '';
+	right: -10px;
+	top: 10px;
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid #FFF5E6;
+}
+
+.commentAuthor {
+    font-weight: bold;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    float: left;
+    margin-right: 10px;
+}
+
+.comment .time {
+    float: left;
+ 	font-size: 0.8em;
+
+}
+
+.comment .commentText {
+    clear: both;
+    display: block;
+    padding: 10px;
+}
+
+.sideBar { 
+	box-sizing: border-box;
+	position: fixed;
+	background: black;
+	padding: 10px;
+	width: 300px;
+	min-height: 100vh;
+}
+
+.threadSelector {
+    cursor: pointer;
+}
+
+.threadSelectorActive {
+    border: 1px solid white;
+    font-weight: 900;
+    cursor: pointer;
+    padding: 0px 5px;
+    border-radius: 5px;
+}
+
+.threadSelector:hover {
+    border-bottom: 2px solid #009CFF;
+}

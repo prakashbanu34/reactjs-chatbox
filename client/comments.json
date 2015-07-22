@@ -1,0 +1,65 @@
+[
+    {
+        "text": "Hoi allen, welkom in de tread Meuk",
+        "author": {
+            "username": "Eltjan",
+            "color": "black"
+        },
+        "time": "1435571730370",
+        "thread": "Random"
+    },
+    {
+        "text": "Look at that weather!",
+        "author": {
+            "username": "Rick",
+            "color": "black"
+        },
+        "time": "1435571730370",
+        "thread": "Weather"
+    },
+    {
+        "text": "It's working",
+        "author": {
+            "username": "Mr. EJ",
+            "color": "#5600ff"
+        },
+        "time": "1435572205199",
+        "thread": "Weather"
+    },
+    {
+        "text": "**bold**",
+        "author": {
+            "username": "James",
+            "color": "black"
+        },
+        "time": "1435759087083",
+        "thread": "Weather"
+    },
+    {
+        "text": "https://youtu.be/8eM2W56tv2o",
+        "author": {
+            "username": "James",
+            "color": "black"
+        },
+        "time": "1435759147941",
+        "thread": "Weather"
+    },
+    {
+        "text": "Hi There",
+        "author": {
+            "username": "Jan",
+            "color": "#14d510"
+        },
+        "time": "1435907347330",
+        "thread": "Weather"
+    },
+    {
+        "text": "We need more chicken!",
+        "author": {
+            "username": "Jan",
+            "color": "#14d510"
+        },
+        "time": "1435907368516",
+        "thread": "BBQ Chat"
+    }
+]
